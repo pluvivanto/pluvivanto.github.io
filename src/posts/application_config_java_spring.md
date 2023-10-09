@@ -1,5 +1,5 @@
 ---
-title: Application Configuration in Java Spring: application.properties vs application.yml
+title: "Application Configuration in Java Spring: application.properties vs application.yml"
 date: git Created
 tags: [java, spring, web]
 permalink: "posts/{{ title | slug }}/index.html"
@@ -10,10 +10,10 @@ Since I started using Spring Boot, I’ve really taken a liking to it. But there
 ## Why Use the “application.\*” File?
 
 Actually, I might not need it, as the document says:  
-> Spring Boot lets you externalize your configuration so that you can work with the same application code in different environments.
+> Spring Boot lets you externalize your configuration so that you can work with the same application code in different environments.  
 
 Using application.\* file is called *Externalized Configuration*. This is handy when you want different settings for different things. Like, having special setups for production, development, or testing. And it goes beyond that, covering situations like MSA or Docker environments.  
-Keeping configuration apart from code is a smart move in most cases, if not all. Especially in big company codebases, you’d rather not hunt down and modify all the `@PropertySource` notes in your `@Configuration` classes every time you release (and believe me, I’ve been there).
+Keeping configuration apart from code is a smart move in most cases, if not all. Especially in big company codebases, you’d rather not hunt down and modify all the `@PropertySource` notes in your `@Configuration` classes every time you release (and believe me, I’ve been there).  
 
 ##### code 1. I’m sure you don’t want to edit every `@PropertySource` for each environments
 ```java
@@ -58,7 +58,7 @@ my:
 
 ## The Verdict
 
-Personally, I’ll stick with .yml over .properties.
+Personally, I’ll stick with .yml over .properties.  
 Wondering why? Well, yml seems really organized, pushing developers toward a specific coding style (and, honestly, I’m a fan of that).
 
 ## Reference:
