@@ -3,20 +3,9 @@
   
     
       <url>
-        <loc>https://eleventyduo.netlify.app/posts/application-configuration-in-java-spring:-application.properties-vs-application.yml/</loc>
+        <loc>https://pluvivanto.github.io//posts/application-configuration-in-java-spring:-application.properties-vs-application.yml/</loc>
         
-          <lastmod>2023-10-09T12:35:47.000Z</lastmod>
-        
-        
-        
-      </url>
-    
-  
-    
-      <url>
-        <loc>https://eleventyduo.netlify.app/posts/tdd:-test-driven-development-msa/</loc>
-        
-          <lastmod>2023-10-09T12:35:47.000Z</lastmod>
+          <lastmod>2023-10-09T12:53:37.000Z</lastmod>
         
         
         
@@ -25,20 +14,9 @@
   
     
       <url>
-        <loc>https://eleventyduo.netlify.app/about/</loc>
+        <loc>https://pluvivanto.github.io//posts/tdd:-test-driven-development-msa/</loc>
         
-          <lastmod>2023-10-09T12:36:02.736Z</lastmod>
-        
-        
-        
-      </url>
-    
-  
-    
-      <url>
-        <loc>https://eleventyduo.netlify.app/blog/</loc>
-        
-          <lastmod>2023-10-09T12:36:02.736Z</lastmod>
+          <lastmod>2023-10-09T12:53:37.000Z</lastmod>
         
         
         
@@ -47,20 +25,9 @@
   
     
       <url>
-        <loc>https://eleventyduo.netlify.app/</loc>
+        <loc>https://pluvivanto.github.io//about/</loc>
         
-          <lastmod>2023-10-09T12:36:02.740Z</lastmod>
-        
-        
-        
-      </url>
-    
-  
-    
-      <url>
-        <loc>https://eleventyduo.netlify.app/robots.txt</loc>
-        
-          <lastmod>2023-10-09T12:36:02.740Z</lastmod>
+          <lastmod>2023-10-09T12:53:59.024Z</lastmod>
         
         
         
@@ -69,20 +36,9 @@
   
     
       <url>
-        <loc>https://eleventyduo.netlify.app/tags/java/</loc>
+        <loc>https://pluvivanto.github.io//blog/</loc>
         
-          <lastmod>2023-10-09T12:36:02.740Z</lastmod>
-        
-        
-        
-      </url>
-    
-  
-    
-      <url>
-        <loc>https://eleventyduo.netlify.app/tags/spring/</loc>
-        
-          <lastmod>2023-10-09T12:36:02.740Z</lastmod>
+          <lastmod>2023-10-09T12:53:59.024Z</lastmod>
         
         
         
@@ -91,9 +47,9 @@
   
     
       <url>
-        <loc>https://eleventyduo.netlify.app/tags/web/</loc>
+        <loc>https://pluvivanto.github.io//</loc>
         
-          <lastmod>2023-10-09T12:36:02.740Z</lastmod>
+          <lastmod>2023-10-09T12:53:59.028Z</lastmod>
         
         
         
@@ -102,9 +58,53 @@
   
     
       <url>
-        <loc>https://eleventyduo.netlify.app/tags/tdd/</loc>
+        <loc>https://pluvivanto.github.io//robots.txt</loc>
         
-          <lastmod>2023-10-09T12:36:02.740Z</lastmod>
+          <lastmod>2023-10-09T12:53:59.028Z</lastmod>
+        
+        
+        
+      </url>
+    
+  
+    
+      <url>
+        <loc>https://pluvivanto.github.io//tags/java/</loc>
+        
+          <lastmod>2023-10-09T12:53:59.028Z</lastmod>
+        
+        
+        
+      </url>
+    
+  
+    
+      <url>
+        <loc>https://pluvivanto.github.io//tags/spring/</loc>
+        
+          <lastmod>2023-10-09T12:53:59.028Z</lastmod>
+        
+        
+        
+      </url>
+    
+  
+    
+      <url>
+        <loc>https://pluvivanto.github.io//tags/web/</loc>
+        
+          <lastmod>2023-10-09T12:53:59.028Z</lastmod>
+        
+        
+        
+      </url>
+    
+  
+    
+      <url>
+        <loc>https://pluvivanto.github.io//tags/tdd/</loc>
+        
+          <lastmod>2023-10-09T12:53:59.028Z</lastmod>
         
         
         
