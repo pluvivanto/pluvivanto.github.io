@@ -1,8 +1,9 @@
 ---
 layout: home
-title: 'Eleventy Duo'
+title: 'Sand Castle'
 ---
 
-# Hello World
+# A sand stronghold amid the golden shores
 
-Eleventy Duo is a minimal and beautiful Eleventy theme for personal blogs. Checkout the [project's github repo](https://github.com/yinkakun/eleventy-duo) for more info.
+> ***“Nothing is built on stone; All is built on sand, but we must build as if the sand were stone.”***  
+> ― Jorge Luis Borges 

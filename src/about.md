@@ -1,14 +1,16 @@
 ---
-title: About Aidan Charles Powell
+title: About pluvivanto
 layout: about.njk
-name: Aidan Charles Powell
-image: '/images/me.jpeg'
+name: pluvivanto
+image: "/images/sdfg.jpeg"
 ---
 
-Aidan Charles Powell is a 23-year-old health centre receptionist who enjoys watching television, eating out and social media. He is generous and giving, but can also be very rude and a bit lazy.
+I’m pluvivanto, a dedicated developer on a continuous growth path.
 
-He is a Jedi who defines himself as straight. He has a degree in medicine. He is a vegetarian. He is obsessed with vintage dresses.
+My tech journey revolves around learning and adapting, driven by strong values and transparent communication.
 
-He grew up in a middle class neighbourhood. After his mother died when he was young, he was raised by his father
+From crafting efficient code to navigating complex tech landscapes, each experience hones my expertise.
 
-He is currently married to Maureen Erika Quinn. Maureen is 13 years older than him and works as a sales assistant.
+I firmly believe integrity and clear communication fuel progress.
+
+I thrive on embracing new challenges, where technology and human ingenuity unite to push software development into uncharted territories.
