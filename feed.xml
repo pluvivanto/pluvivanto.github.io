@@ -5,7 +5,7 @@
   <link href="https://eleventyduo.netlify.app/feed.xml" rel="self"/>
   <link href="https://eleventyduo.netlify.app/"/>
   
-    <updated>2021-06-28T00:00:00+00:00</updated>
+    <updated>2023-10-09T12:35:47Z</updated>
   
   <id>https://eleventyduo.netlify.app</id>
   <author>
@@ -15,32 +15,58 @@
   
     
     <entry>
-      <title>A simple post</title>
-      <link href="https://eleventyduo.netlify.app/posts/a-simple-post/"/>
-      <updated>2020-10-18T00:00:00+00:00</updated>
-      <id>https://eleventyduo.netlify.app/posts/a-simple-post/</id>
+      <title>Application Configuration in Java Spring: application.properties vs application.yml</title>
+      <link href="https://eleventyduo.netlify.app/posts/application-configuration-in-java-spring:-application.properties-vs-application.yml/"/>
+      <updated>2023-10-09T12:35:47Z</updated>
+      <id>https://eleventyduo.netlify.app/posts/application-configuration-in-java-spring:-application.properties-vs-application.yml/</id>
       <content type="html">
         <![CDATA[
-      <p>Meditation gentrify fam, yuccie kickstarter brunch vape. Pitchfork freegan biodiesel bicycle rights. Semiotics flexitarian four loko XOXO raw denim chartreuse. Cray ramps microdosing everyday carry bicycle rights</p>
-<h2>How about a <code>&lt;blockquote&gt;</code>?</h2>
+      <p>Since I started using Spring Boot, I’ve really taken a liking to it. But there’s this quirky habit that’s formed. Every time I grab a new Spring project from the Spring Initializer, I end up deleting the default application.properties file and crafting a new application.yml file. Then, I fill it with stuff like flags, paths, and database settings, just out of habit. What’s funny is that I can’t exactly explain why I do it, but it’s become a part of my routine. Lately, I’ve decided to face my curiosity head-on and delve into the Spring documentation to better grasp this practice.</p>
+<h2>Why Use the “application.*” File?</h2>
+<p>Actually, I might not need it, as the document says:</p>
 <blockquote>
-<p>Maecenas faucibus mollis interdum. Morbi leo risus, porta ac consectetur ac, vestibulum at eros. Aenean lacinia bibendum nulla sed consectetur. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla vitae elit libero, a pharetra augue.</p>
+<p>Spring Boot lets you externalize your configuration so that you can work with the same application code in different environments.</p>
 </blockquote>
-<h2>Unordered list of stuff:</h2>
+<p>Using application.* file is called <em>Externalized Configuration</em>. This is handy when you want different settings for different things. Like, having special setups for production, development, or testing. And it goes beyond that, covering situations like MSA or Docker environments.<br>
+Keeping configuration apart from code is a smart move in most cases, if not all. Especially in big company codebases, you’d rather not hunt down and modify all the <code>@PropertySource</code> notes in your <code>@Configuration</code> classes every time you release (and believe me, I’ve been there).</p>
+<h5>code 1. I’m sure you don’t want to edit every <code>@PropertySource</code> for each environments</h5>
+<pre class="language-java"><code class="language-java"><span class="token annotation punctuation">@Configuration</span>
+<span class="token annotation punctuation">@PropertySource</span><span class="token punctuation">(</span><span class="token string">"classpath:/com/${my.placeholder:default/path}/app.properties"</span><span class="token punctuation">)</span>
+ <span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">AppConfig</span> <span class="token punctuation">{</span>
+     <span class="token annotation punctuation">@Autowired</span>
+     <span class="token class-name">Environment</span> env<span class="token punctuation">;</span>
+     <span class="token annotation punctuation">@Bean</span>
+     <span class="token keyword">public</span> <span class="token class-name">TestBean</span> <span class="token function">testBean</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+         <span class="token class-name">TestBean</span> testBean <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">TestBean</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+         testBean<span class="token punctuation">.</span><span class="token function">setName</span><span class="token punctuation">(</span>env<span class="token punctuation">.</span><span class="token function">getProperty</span><span class="token punctuation">(</span><span class="token string">"testbean.name"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+         <span class="token keyword">return</span> testBean<span class="token punctuation">;</span>
+     <span class="token punctuation">}</span>
+<span class="token punctuation">}</span></code></pre>
+<h2>So, what’s the deal with .properties and .yml?</h2>
+<p>When it comes to how they work, they’re basically same. The only difference is the syntax and formatting. Now, let’s check out the example from the official document:</p>
+<h5>code 2: application.properties</h5>
+<pre class="language-properties"><code class="language-properties"><span class="token key attr-name">my.secret</span><span class="token punctuation">=</span><span class="token value attr-value">${random.value}</span>
+<span class="token key attr-name">my.number</span><span class="token punctuation">=</span><span class="token value attr-value">${random.int}</span>
+<span class="token key attr-name">my.bignumber</span><span class="token punctuation">=</span><span class="token value attr-value">${random.long}</span>
+<span class="token key attr-name">my.uuid</span><span class="token punctuation">=</span><span class="token value attr-value">${random.uuid}</span>
+<span class="token key attr-name">my.number-less-than-ten</span><span class="token punctuation">=</span><span class="token value attr-value">${random.int(10)}</span>
+<span class="token key attr-name">my.number-in-range</span><span class="token punctuation">=</span><span class="token value attr-value">${random.int[1024,65536]}</span></code></pre>
+<h5>code 3: application.yml</h5>
+<pre class="language-yaml"><code class="language-yaml"><span class="token key atrule">my</span><span class="token punctuation">:</span>
+  <span class="token key atrule">secret</span><span class="token punctuation">:</span> <span class="token string">"${random.value}"</span>
+  <span class="token key atrule">number</span><span class="token punctuation">:</span> <span class="token string">"${random.int}"</span>
+  <span class="token key atrule">bignumber</span><span class="token punctuation">:</span> <span class="token string">"${random.long}"</span>
+  <span class="token key atrule">uuid</span><span class="token punctuation">:</span> <span class="token string">"${random.uuid}"</span>
+  <span class="token key atrule">number-less-than-ten</span><span class="token punctuation">:</span> <span class="token string">"${random.int(10)}"</span>
+  <span class="token key atrule">number-in-range</span><span class="token punctuation">:</span> <span class="token string">"${random.int[1024,65536]}"</span></code></pre>
+<h2>The Verdict</h2>
+<p>Personally, I’ll stick with .yml over .properties.<br>
+Wondering why? Well, yml seems really organized, pushing developers toward a specific coding style (and, honestly, I’m a fan of that).</p>
+<h2>Reference:</h2>
 <ul>
-<li>Sed posuere consectetur est at lobortis</li>
-<li>Aenean lacinia bibendum nulla sed consectetur</li>
-<li>Sed posuere consectetur est at lobortis</li>
+<li>https://docs.spring.io/spring-boot/docs/current/reference/html/application-properties.html#appendix.application-properties.core</li>
+<li>https://docs.spring.io/spring-boot/docs/current/reference/html/features.html#features.external-config</li>
 </ul>
-<h2>Ordered list:</h2>
-<ol>
-<li>Sed posuere consectetur est at lobortis</li>
-<li>Aenean lacinia bibendum nulla sed consectetur</li>
-<li>Sed posuere consectetur est at lobortis</li>
-</ol>
-<p>Bitters bushwick schlitz, 3 wolf moon tofu hoodie beard bicycle rights truffaut keffiyeh sartorial.</p>
-<h2>Monospace Text wrapped in &quot;pre&quot; tags:</h2>
-<pre>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Nullam dignissim convallis est. Quisque aliquam. Donec faucibus. Nunc iaculis suscipit dui. Nam sit amet sem. Aliquam libero nisi, imperdiet at, tincidunt nec, gravida vehicula, nisl.</pre>
 
     ]]>
       </content>
@@ -48,324 +74,81 @@
   
     
     <entry>
-      <title>Another simple post</title>
-      <link href="https://eleventyduo.netlify.app/posts/another-simple-post/"/>
-      <updated>2020-10-22T00:00:00+00:00</updated>
-      <id>https://eleventyduo.netlify.app/posts/another-simple-post/</id>
+      <title>TDD: Test Driven Development – 한빛 MSA</title>
+      <link href="https://eleventyduo.netlify.app/posts/tdd:-test-driven-development-msa/"/>
+      <updated>2023-10-09T12:35:47Z</updated>
+      <id>https://eleventyduo.netlify.app/posts/tdd:-test-driven-development-msa/</id>
       <content type="html">
         <![CDATA[
-      <p>Meditation gentrify fam, yuccie kickstarter brunch vape. Pitchfork freegan biodiesel bicycle rights. Semiotics flexitarian four loko XOXO raw denim chartreuse. Cray ramps microdosing everyday carry bicycle rights</p>
-<h2>How about a <code>&lt;blockquote&gt;</code>?</h2>
-<blockquote>
-<p>Maecenas faucibus mollis interdum. Morbi leo risus, porta ac consectetur ac, vestibulum at eros. Aenean lacinia bibendum nulla sed consectetur. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla vitae elit libero, a pharetra augue.</p>
-</blockquote>
-<h2>Unordered list of stuff:</h2>
+      <p><strong><em>Speaker: MS 코리아 Solutions Architect 정보람님</em></strong></p>
+<h2>TDD는 설계-구현-테스트 의 사이클을 빠르게 변하는 요구사항에 맞추기 좋게 하기 위한 것</h2>
+<p><img src="presentation1.jpg" alt="TDD lifecycle"><em>TDD lifecycle</em></p>
+<p>볼링 게임 – TDD계의 Hello, World!</p>
+<h2>TDD pros &amp; cons</h2>
+<table>
+  <th>pros</th>
+  <th>pros</th>
+  <tr>
+    <td>
+      <ul>
+        <li>코드 품질 향상</li>
+        <li>확장이 용이</li>
+        <li>최소기능 단위로 개발해서 수정 및 디버깅이 쉬움</li>
+      </ul>
+    </td>
+    <td>
+      <ul>
+        <li>초기투자시간 大</li>
+        <li>테스트 코드를 작성하기 어려움</li>
+        <li>개발 속도가 느리다</li>
+      </ul>
+    </td>
+  </tr>
+</table>
+<p>stub &amp; mock 참고하기</p>
+<h2>TDD 자체가 프로젝트의 목적이 되어서는 주객전도. agile 도 TDD 도 “유연하게” 적용해야 한다!!</h2>
+<p>-&gt; 공통 목표를 효율적으로 달성하기 위한 틀로만 활용!
+ideal: 프로젝트 전체에 TDD 적용 (이러다가 고꾸라진 프로젝트가 많다)
+reality: 복잡도가 높을 것으로 예상되는 부분만 부분적 도입!</p>
+<h2>speaker 최근 관심:</h2>
+<p><strong>BDD: Behavior Driven Development</strong></p>
 <ul>
-<li>Sed posuere consectetur est at lobortis</li>
-<li>Aenean lacinia bibendum nulla sed consectetur</li>
-<li>Sed posuere consectetur est at lobortis</li>
+<li>비즈니스 요구사항에 집중</li>
+<li>테스트를 요구사항과 최대한 비슷하게 설계</li>
 </ul>
-<h2>Ordered list:</h2>
-<ol>
-<li>Sed posuere consectetur est at lobortis</li>
-<li>Aenean lacinia bibendum nulla sed consectetur</li>
-<li>Sed posuere consectetur est at lobortis</li>
-</ol>
-<p>Bitters bushwick schlitz, 3 wolf moon tofu hoodie beard bicycle rights truffaut keffiyeh sartorial.</p>
-<h2>Monospace Text wrapped in &quot;pre&quot; tags:</h2>
-<pre>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Nullam dignissim convallis est. Quisque aliquam. Donec faucibus. Nunc iaculis suscipit dui. Nam sit amet sem. Aliquam libero nisi, imperdiet at, tincidunt nec, gravida vehicula, nisl.</pre>
-
-    ]]>
-      </content>
-    </entry>
-  
-    
-    <entry>
-      <title>Even yet another simple post</title>
-      <link href="https://eleventyduo.netlify.app/posts/even-yet-another-simple-post/"/>
-      <updated>2020-10-25T00:00:00+00:00</updated>
-      <id>https://eleventyduo.netlify.app/posts/even-yet-another-simple-post/</id>
-      <content type="html">
-        <![CDATA[
-      <p>Meditation gentrify fam, yuccie kickstarter brunch vape. Pitchfork freegan biodiesel bicycle rights. Semiotics flexitarian four loko XOXO raw denim chartreuse. Cray ramps microdosing everyday carry bicycle rights</p>
-<h2>How about a <code>&lt;blockquote&gt;</code>?</h2>
-<blockquote>
-<p>Maecenas faucibus mollis interdum. Morbi leo risus, porta ac consectetur ac, vestibulum at eros. Aenean lacinia bibendum nulla sed consectetur. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla vitae elit libero, a pharetra augue.</p>
-</blockquote>
-<h2>Unordered list of stuff:</h2>
+<p><strong>DDD: Domain Driven Development</strong></p>
 <ul>
-<li>Sed posuere consectetur est at lobortis</li>
-<li>Aenean lacinia bibendum nulla sed consectetur</li>
-<li>Sed posuere consectetur est at lobortis</li>
+<li>테스트보다도 도메인이 중요 -&gt; MSA 구조 시스템에 적합</li>
 </ul>
-<h2>Ordered list:</h2>
-<ol>
-<li>Sed posuere consectetur est at lobortis</li>
-<li>Aenean lacinia bibendum nulla sed consectetur</li>
-<li>Sed posuere consectetur est at lobortis</li>
-</ol>
-<p>Bitters bushwick schlitz, 3 wolf moon tofu hoodie beard bicycle rights truffaut keffiyeh sartorial.</p>
-<h2>Monospace Text wrapped in &quot;pre&quot; tags:</h2>
-<pre>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Nullam dignissim convallis est. Quisque aliquam. Donec faucibus. Nunc iaculis suscipit dui. Nam sit amet sem. Aliquam libero nisi, imperdiet at, tincidunt nec, gravida vehicula, nisl.</pre>
-
-    ]]>
-      </content>
-    </entry>
-  
-    
-    <entry>
-      <title>Yet another simple post</title>
-      <link href="https://eleventyduo.netlify.app/posts/yet-another-simple-post/"/>
-      <updated>2020-10-29T00:00:00+00:00</updated>
-      <id>https://eleventyduo.netlify.app/posts/yet-another-simple-post/</id>
-      <content type="html">
-        <![CDATA[
-      <p>Meditation gentrify fam, yuccie kickstarter brunch vape. Pitchfork freegan biodiesel bicycle rights. Semiotics flexitarian four loko XOXO raw denim chartreuse. Cray ramps microdosing everyday carry bicycle rights</p>
-<h2>How about a <code>&lt;blockquote&gt;</code>?</h2>
-<blockquote>
-<p>Maecenas faucibus mollis interdum. Morbi leo risus, porta ac consectetur ac, vestibulum at eros. Aenean lacinia bibendum nulla sed consectetur. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla vitae elit libero, a pharetra augue.</p>
-</blockquote>
-<h2>Unordered list of stuff:</h2>
+<h2>TDD examples</h2>
+<p><strong>1. 아무도 어떻게 작동하는지 모르는 레거시 프로젝트에서 새 기능 개발</strong></p>
 <ul>
-<li>Sed posuere consectetur est at lobortis</li>
-<li>Aenean lacinia bibendum nulla sed consectetur</li>
-<li>Sed posuere consectetur est at lobortis</li>
+<li>레거시 코드를 블랙박스로 취급</li>
+<li>기존 코드에 대한 유닛 테스트를 작성</li>
+<li>기존 코드 green 상태를 유지하면서 리팩토링</li>
+<li>이후 새 기능을 TDD 기반으로 쌓기</li>
 </ul>
-<h2>Ordered list:</h2>
-<ol>
-<li>Sed posuere consectetur est at lobortis</li>
-<li>Aenean lacinia bibendum nulla sed consectetur</li>
-<li>Sed posuere consectetur est at lobortis</li>
-</ol>
-<p>Bitters bushwick schlitz, 3 wolf moon tofu hoodie beard bicycle rights truffaut keffiyeh sartorial.</p>
-<h2>Monospace Text wrapped in &quot;pre&quot; tags:</h2>
-<pre>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Nullam dignissim convallis est. Quisque aliquam. Donec faucibus. Nunc iaculis suscipit dui. Nam sit amet sem. Aliquam libero nisi, imperdiet at, tincidunt nec, gravida vehicula, nisl.</pre>
-    ]]>
-      </content>
-    </entry>
-  
-    
-    <entry>
-      <title>A post with code samples</title>
-      <link href="https://eleventyduo.netlify.app/posts/a-post-with-code-samples/"/>
-      <updated>2020-11-18T00:00:00+00:00</updated>
-      <id>https://eleventyduo.netlify.app/posts/a-post-with-code-samples/</id>
-      <content type="html">
-        <![CDATA[
-      <p>Health goth raw denim vaporware waistcoat, vegan neutra glossier. Cronut chartreuse tbh meh schlitz. Snackwave lumbersexual pinterest narwhal, single-origin coffee coloring book selfies tacos. Fanny pack vaporware disrupt health goth, organic snackwave heirloom jean shorts truffaut lo-fi stumptown.</p>
-<h2>The <code>.full-bleed</code> utility</h2>
-<pre class="language-css"><code class="language-css"><span class="token selector">.full-bleed</span> <span class="token punctuation">{</span><br>  <span class="token property">width</span><span class="token punctuation">:</span> 100vw<span class="token punctuation">;</span><br>  <span class="token property">margin-left</span><span class="token punctuation">:</span> 50%<span class="token punctuation">;</span><br>  <span class="token property">transform</span><span class="token punctuation">:</span> <span class="token function">translateX</span><span class="token punctuation">(</span>-50%<span class="token punctuation">)</span><span class="token punctuation">;</span><br><span class="token punctuation">}</span></code></pre>
-<h2>Heading</h2>
-<p>Staff engagement highlights yet are we in agreeance, nor time vampire yet programmatically. Imagineer proceduralize. Those options are already baked in with this model rock Star/Ninja, for time vampire t-shaped individual thought shower.</p>
-<p>Closing these latest prospects is like putting socks on an octopus even dead cats bounce, and herding cats, so deploy, for come up with something buzzworthy, nor come up with something buzzworthy we are running out of runway. PowerPointless idea shower. Cross sabers moving the goalposts. Gain traction.</p>
-<p>Curate I just wanted to give you a heads-up. Move the needle. Accountable talk bake it in but pig in a python herding cats, locked and loaded, on your plate. Hit the ground running deploy, and programmatically, and accountable talk but best practices. Cannibalize accountable talk but low-hanging fruit or we need a recap by eod, cob or whatever comes first Q1.</p>
-<h2>Heading</h2>
-<p>Draw a line in the sand time vampire translating our vision of having a market leading platfrom. Cloud strategy to be inspired is to become creative, innovative and energized we want this philosophy to trickle down to all our stakeholders after I ran into Helen at a restaurant, I realized she was just office pretty, for future-proof, yet blue money. Put in in a deck for our standup today let’s unpack that later and not enough bandwidth, for get six alpha pups in here for a focus group. Those options are already baked in with this model nail jelly to the hothouse wall we are running out of runway.</p>
-<h2>Heading</h2>
-<p>Upsell we need to socialize the comms with the wider stakeholder community bench mark accountable talk nor price point. Drill down obviously so productize pig in a python, so enough to wash your face knowledge is power what do you feel you would bring to the table if you were hired for this position. New economy. Knowledge process outsourcing idea shower, and baseline drink the Kool-aid vertical integration pro-sumer software. Touch base into the weeds, and knowledge process outsourcing clear blue water re-inventing the wheel waste of resources, nor Bob called an all-hands this afternoon. I don’t want to drain the whole swamp, i just want to shoot some alligators.</p>
-
-    ]]>
-      </content>
-    </entry>
-  
-    
-    <entry>
-      <title>Another post with code samples</title>
-      <link href="https://eleventyduo.netlify.app/posts/another-post-with-code-samples/"/>
-      <updated>2020-11-19T00:00:00+00:00</updated>
-      <id>https://eleventyduo.netlify.app/posts/another-post-with-code-samples/</id>
-      <content type="html">
-        <![CDATA[
-      <p>Health goth raw denim vaporware waistcoat, vegan neutra glossier. Cronut chartreuse tbh meh schlitz. Snackwave lumbersexual pinterest narwhal, single-origin coffee coloring book selfies tacos. Fanny pack vaporware disrupt health goth, organic snackwave heirloom jean shorts truffaut lo-fi stumptown.</p>
-<h2>The <code>.full-bleed</code> utility</h2>
-<pre class="language-css"><code class="language-css"><span class="token selector">.full-bleed</span> <span class="token punctuation">{</span><br>  <span class="token property">width</span><span class="token punctuation">:</span> 100vw<span class="token punctuation">;</span><br>  <span class="token property">margin-left</span><span class="token punctuation">:</span> 50%<span class="token punctuation">;</span><br>  <span class="token property">transform</span><span class="token punctuation">:</span> <span class="token function">translateX</span><span class="token punctuation">(</span>-50%<span class="token punctuation">)</span><span class="token punctuation">;</span><br><span class="token punctuation">}</span></code></pre>
-<h2>Heading</h2>
-<p>Staff engagement highlights yet are we in agreeance, nor time vampire yet programmatically. Imagineer proceduralize. Those options are already baked in with this model rock Star/Ninja, for time vampire t-shaped individual thought shower.</p>
-<p>Closing these latest prospects is like putting socks on an octopus even dead cats bounce, and herding cats, so deploy, for come up with something buzzworthy, nor come up with something buzzworthy we are running out of runway. PowerPointless idea shower. Cross sabers moving the goalposts. Gain traction.</p>
-<p>Curate I just wanted to give you a heads-up. Move the needle. Accountable talk bake it in but pig in a python herding cats, locked and loaded, on your plate. Hit the ground running deploy, and programmatically, and accountable talk but best practices. Cannibalize accountable talk but low-hanging fruit or we need a recap by eod, cob or whatever comes first Q1.</p>
-<h2>Heading</h2>
-<p>Draw a line in the sand time vampire translating our vision of having a market leading platfrom. Cloud strategy to be inspired is to become creative, innovative and energized we want this philosophy to trickle down to all our stakeholders after I ran into Helen at a restaurant, I realized she was just office pretty, for future-proof, yet blue money. Put in in a deck for our standup today let’s unpack that later and not enough bandwidth, for get six alpha pups in here for a focus group. Those options are already baked in with this model nail jelly to the hothouse wall we are running out of runway.</p>
-<h2>Heading</h2>
-<p>Upsell we need to socialize the comms with the wider stakeholder community bench mark accountable talk nor price point. Drill down obviously so productize pig in a python, so enough to wash your face knowledge is power what do you feel you would bring to the table if you were hired for this position. New economy. Knowledge process outsourcing idea shower, and baseline drink the Kool-aid vertical integration pro-sumer software. Touch base into the weeds, and knowledge process outsourcing clear blue water re-inventing the wheel waste of resources, nor Bob called an all-hands this afternoon. I don’t want to drain the whole swamp, i just want to shoot some alligators.</p>
-
-    ]]>
-      </content>
-    </entry>
-  
-    
-    <entry>
-      <title>Even yet another post with code samples</title>
-      <link href="https://eleventyduo.netlify.app/posts/even-yet-another-post-with-code-samples/"/>
-      <updated>2020-11-23T00:00:00+00:00</updated>
-      <id>https://eleventyduo.netlify.app/posts/even-yet-another-post-with-code-samples/</id>
-      <content type="html">
-        <![CDATA[
-      <p>Health goth raw denim vaporware waistcoat, vegan neutra glossier. Cronut chartreuse tbh meh schlitz. Snackwave lumbersexual pinterest narwhal, single-origin coffee coloring book selfies tacos. Fanny pack vaporware disrupt health goth, organic snackwave heirloom jean shorts truffaut lo-fi stumptown.</p>
-<h2>The <code>.full-bleed</code> utility</h2>
-<pre class="language-css"><code class="language-css"><span class="token selector">.full-bleed</span> <span class="token punctuation">{</span><br>  <span class="token property">width</span><span class="token punctuation">:</span> 100vw<span class="token punctuation">;</span><br>  <span class="token property">margin-left</span><span class="token punctuation">:</span> 50%<span class="token punctuation">;</span><br>  <span class="token property">transform</span><span class="token punctuation">:</span> <span class="token function">translateX</span><span class="token punctuation">(</span>-50%<span class="token punctuation">)</span><span class="token punctuation">;</span><br><span class="token punctuation">}</span></code></pre>
-<h2>Heading</h2>
-<p>Staff engagement highlights yet are we in agreeance, nor time vampire yet programmatically. Imagineer proceduralize. Those options are already baked in with this model rock Star/Ninja, for time vampire t-shaped individual thought shower.</p>
-<p>Closing these latest prospects is like putting socks on an octopus even dead cats bounce, and herding cats, so deploy, for come up with something buzzworthy, nor come up with something buzzworthy we are running out of runway. PowerPointless idea shower. Cross sabers moving the goalposts. Gain traction.</p>
-<p>Curate I just wanted to give you a heads-up. Move the needle. Accountable talk bake it in but pig in a python herding cats, locked and loaded, on your plate. Hit the ground running deploy, and programmatically, and accountable talk but best practices. Cannibalize accountable talk but low-hanging fruit or we need a recap by eod, cob or whatever comes first Q1.</p>
-<h2>Heading</h2>
-<p>Draw a line in the sand time vampire translating our vision of having a market leading platfrom. Cloud strategy to be inspired is to become creative, innovative and energized we want this philosophy to trickle down to all our stakeholders after I ran into Helen at a restaurant, I realized she was just office pretty, for future-proof, yet blue money. Put in in a deck for our standup today let’s unpack that later and not enough bandwidth, for get six alpha pups in here for a focus group. Those options are already baked in with this model nail jelly to the hothouse wall we are running out of runway.</p>
-<h2>Heading</h2>
-<p>Upsell we need to socialize the comms with the wider stakeholder community bench mark accountable talk nor price point. Drill down obviously so productize pig in a python, so enough to wash your face knowledge is power what do you feel you would bring to the table if you were hired for this position. New economy. Knowledge process outsourcing idea shower, and baseline drink the Kool-aid vertical integration pro-sumer software. Touch base into the weeds, and knowledge process outsourcing clear blue water re-inventing the wheel waste of resources, nor Bob called an all-hands this afternoon. I don’t want to drain the whole swamp, i just want to shoot some alligators.</p>
-
-    ]]>
-      </content>
-    </entry>
-  
-    
-    <entry>
-      <title>test123</title>
-      <link href="https://eleventyduo.netlify.app/posts/test123/"/>
-      <updated>2020-11-26T00:00:00+00:00</updated>
-      <id>https://eleventyduo.netlify.app/posts/test123/</id>
-      <content type="html">
-        <![CDATA[
-      <p>ipsum loream ha ha bla bla</p>
-
-    ]]>
-      </content>
-    </entry>
-  
-    
-    <entry>
-      <title>A post with rich media</title>
-      <link href="https://eleventyduo.netlify.app/posts/a-post-with-rich-media/"/>
-      <updated>2020-12-20T00:00:00+00:00</updated>
-      <id>https://eleventyduo.netlify.app/posts/a-post-with-rich-media/</id>
-      <content type="html">
-        <![CDATA[
-      <p>The last person we talked to said this would be ready action item, and what do you feel you would bring to the table if you were hired for this position bells and whistles. Rock Star/Ninja UI put a record on and see who dances, or cannibalize. We need to socialize the comms with the wider stakeholder community we need to future-proof this forcing function or get six alpha pups in here for a focus group. Helicopter view quarterly sales are at an all-time low so future-proof going forward we’re ahead of the curve on that one yet due diligence, so get buy-in. Back to the drawing-board action item get six alpha pups in here for a focus group ramp up.</p>
-<h2>Image</h2>
-<p><img src="https://demo.ghost.io/content/images/2014/09/testimg1.jpeg" alt="Test Image"></p>
-<p>Low-hanging fruit design thinking loop back, race without a finish line. Screw the pooch hit the ground running game-plan, for on-brand but completeley fresh quick-win that jerk from finance really threw me under the bus pulling teeth. Level the playing field. Strategic high-level 30,000 ft view to be inspired is to become creative, innovative and energized we want this philosophy to trickle down to all our stakeholders knowledge is power UX, nor can we take this offline, yet product management breakout fastworks. Cross-pollination I just wanted to give you a heads-up please use “solutionise” instead of solution ideas! 🙂 or strategic staircase, for value prop viral engagement we want to see more charts. Productize level the playing field great plan! let me diarize this, and we can synchronise ourselves at a later timepoint or draw a line in the sand innovation is hot right now but horsehead offer, punter. Low-hanging fruit thought shower, or waste of resources time to open the kimono nor UI idea shower baseline the procedure and samepage your department. Organic growth proceduralize. Player-coach. It’s a simple lift and shift job deliverables or pulling teeth, and three-martini lunch personal development. What’s the status on the deliverables for eow?. Cannibalize knowledge is power and staff engagement.</p>
-<h2>Video</h2>
-<iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/Yw6u6YkTgQ4" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-<p>Action item screw the pooch, so cannibalize, nor streamline, so Bob called an all-hands this afternoon t-shaped individual but drink the Kool-aid. Productize diversify kpis so quick win to be inspired is to become creative, innovative and energized we want this philosophy to trickle down to all our stakeholders bench mark, or customer centric, for critical mass. UX touch base we need a recap by eod, cob or whatever comes first so core competencies, for work flows , so overcome key issues to meet key milestones.</p>
-<h2>Audio</h2>
-<iframe width="100%" height="300" scrolling="no" frameborder="no" allow="autoplay" src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/422530128&color=%23ff5500&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true&visual=true"></iframe><div style="font-size: 10px; color: #cccccc;line-break: anywhere;word-break: normal;overflow: hidden;white-space: nowrap;text-overflow: ellipsis; font-family: Interstate,Lucida Grande,Lucida Sans Unicode,Lucida Sans,Garuda,Verdana,Tahoma,sans-serif;font-weight: 100;"><a href="https://soundcloud.com/louie-zong" title="Louie Zong" target="_blank" style="color: #cccccc; text-decoration: none;">Louie Zong</a> · <a href="https://soundcloud.com/louie-zong/hello-world" title="hello world" target="_blank" style="color: #cccccc; text-decoration: none;">hello world</a></div>
-<p>At the end of the day. Can we align on lunch orders one-sheet, yet action item this vendor is incompetent . Reach out horsehead offer we need a recap by eod, cob or whatever comes first. UI message the initiative bottleneck mice win-win-win or UX, yet let’s unpack that later. Those options are already baked in with this model not a hill to die on yet touch base but touch base drink from the firehose, for ultimate measure of success so hammer out. Not the long pole in my tent. The last person we talked to said this would be ready pushback. Viral engagement granularity organic growth. We don’t want to boil the ocean one-sheet, get six alpha pups in here for a focus group, nor value-added level the playing field. Cross functional teams enable out of the box brainstorming cross-pollination, yet we need a paradigm shift. Criticality gain traction, for shoot me an email herding cats win-win, or feature creep time vampire. Cloud strategy.</p>
-
-    ]]>
-      </content>
-    </entry>
-  
-    
-    <entry>
-      <title>Another post with rich media</title>
-      <link href="https://eleventyduo.netlify.app/posts/another-post-with-rich-media/"/>
-      <updated>2020-12-21T00:00:00+00:00</updated>
-      <id>https://eleventyduo.netlify.app/posts/another-post-with-rich-media/</id>
-      <content type="html">
-        <![CDATA[
-      <p>The last person we talked to said this would be ready action item, and what do you feel you would bring to the table if you were hired for this position bells and whistles. Rock Star/Ninja UI put a record on and see who dances, or cannibalize. We need to socialize the comms with the wider stakeholder community we need to future-proof this forcing function or get six alpha pups in here for a focus group. Helicopter view quarterly sales are at an all-time low so future-proof going forward we’re ahead of the curve on that one yet due diligence, so get buy-in. Back to the drawing-board action item get six alpha pups in here for a focus group ramp up.</p>
-<h2>Image</h2>
-<p><img src="https://demo.ghost.io/content/images/2014/09/testimg1.jpeg" alt="Test Image"></p>
-<p>Low-hanging fruit design thinking loop back, race without a finish line. Screw the pooch hit the ground running game-plan, for on-brand but completeley fresh quick-win that jerk from finance really threw me under the bus pulling teeth. Level the playing field. Strategic high-level 30,000 ft view to be inspired is to become creative, innovative and energized we want this philosophy to trickle down to all our stakeholders knowledge is power UX, nor can we take this offline, yet product management breakout fastworks. Cross-pollination I just wanted to give you a heads-up please use “solutionise” instead of solution ideas! 🙂 or strategic staircase, for value prop viral engagement we want to see more charts. Productize level the playing field great plan! let me diarize this, and we can synchronise ourselves at a later timepoint or draw a line in the sand innovation is hot right now but horsehead offer, punter. Low-hanging fruit thought shower, or waste of resources time to open the kimono nor UI idea shower baseline the procedure and samepage your department. Organic growth proceduralize. Player-coach. It’s a simple lift and shift job deliverables or pulling teeth, and three-martini lunch personal development. What’s the status on the deliverables for eow?. Cannibalize knowledge is power and staff engagement.</p>
-<h2>Video</h2>
-<iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/Yw6u6YkTgQ4" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-<p>Action item screw the pooch, so cannibalize, nor streamline, so Bob called an all-hands this afternoon t-shaped individual but drink the Kool-aid. Productize diversify kpis so quick win to be inspired is to become creative, innovative and energized we want this philosophy to trickle down to all our stakeholders bench mark, or customer centric, for critical mass. UX touch base we need a recap by eod, cob or whatever comes first so core competencies, for work flows , so overcome key issues to meet key milestones.</p>
-<h2>Audio</h2>
-<iframe width="100%" height="300" scrolling="no" frameborder="no" allow="autoplay" src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/422530128&color=%23ff5500&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true&visual=true"></iframe><div style="font-size: 10px; color: #cccccc;line-break: anywhere;word-break: normal;overflow: hidden;white-space: nowrap;text-overflow: ellipsis; font-family: Interstate,Lucida Grande,Lucida Sans Unicode,Lucida Sans,Garuda,Verdana,Tahoma,sans-serif;font-weight: 100;"><a href="https://soundcloud.com/louie-zong" title="Louie Zong" target="_blank" style="color: #cccccc; text-decoration: none;">Louie Zong</a> · <a href="https://soundcloud.com/louie-zong/hello-world" title="hello world" target="_blank" style="color: #cccccc; text-decoration: none;">hello world</a></div>
-<p>At the end of the day. Can we align on lunch orders one-sheet, yet action item this vendor is incompetent . Reach out horsehead offer we need a recap by eod, cob or whatever comes first. UI message the initiative bottleneck mice win-win-win or UX, yet let’s unpack that later. Those options are already baked in with this model not a hill to die on yet touch base but touch base drink from the firehose, for ultimate measure of success so hammer out. Not the long pole in my tent. The last person we talked to said this would be ready pushback. Viral engagement granularity organic growth. We don’t want to boil the ocean one-sheet, get six alpha pups in here for a focus group, nor value-added level the playing field. Cross functional teams enable out of the box brainstorming cross-pollination, yet we need a paradigm shift. Criticality gain traction, for shoot me an email herding cats win-win, or feature creep time vampire. Cloud strategy.</p>
-
-    ]]>
-      </content>
-    </entry>
-  
-    
-    <entry>
-      <title>Even yet another post with rich media</title>
-      <link href="https://eleventyduo.netlify.app/posts/even-yet-another-post-with-rich-media/"/>
-      <updated>2020-12-24T00:00:00+00:00</updated>
-      <id>https://eleventyduo.netlify.app/posts/even-yet-another-post-with-rich-media/</id>
-      <content type="html">
-        <![CDATA[
-      <p>The last person we talked to said this would be ready action item, and what do you feel you would bring to the table if you were hired for this position bells and whistles. Rock Star/Ninja UI put a record on and see who dances, or cannibalize. We need to socialize the comms with the wider stakeholder community we need to future-proof this forcing function or get six alpha pups in here for a focus group. Helicopter view quarterly sales are at an all-time low so future-proof going forward we’re ahead of the curve on that one yet due diligence, so get buy-in. Back to the drawing-board action item get six alpha pups in here for a focus group ramp up.</p>
-<h2>Image</h2>
-<p><img src="https://demo.ghost.io/content/images/2014/09/testimg1.jpeg" alt="Test Image"></p>
-<p>Low-hanging fruit design thinking loop back, race without a finish line. Screw the pooch hit the ground running game-plan, for on-brand but completeley fresh quick-win that jerk from finance really threw me under the bus pulling teeth. Level the playing field. Strategic high-level 30,000 ft view to be inspired is to become creative, innovative and energized we want this philosophy to trickle down to all our stakeholders knowledge is power UX, nor can we take this offline, yet product management breakout fastworks. Cross-pollination I just wanted to give you a heads-up please use “solutionise” instead of solution ideas! 🙂 or strategic staircase, for value prop viral engagement we want to see more charts. Productize level the playing field great plan! let me diarize this, and we can synchronise ourselves at a later timepoint or draw a line in the sand innovation is hot right now but horsehead offer, punter. Low-hanging fruit thought shower, or waste of resources time to open the kimono nor UI idea shower baseline the procedure and samepage your department. Organic growth proceduralize. Player-coach. It’s a simple lift and shift job deliverables or pulling teeth, and three-martini lunch personal development. What’s the status on the deliverables for eow?. Cannibalize knowledge is power and staff engagement.</p>
-<h2>Video</h2>
-<iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/Yw6u6YkTgQ4" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-<p>Action item screw the pooch, so cannibalize, nor streamline, so Bob called an all-hands this afternoon t-shaped individual but drink the Kool-aid. Productize diversify kpis so quick win to be inspired is to become creative, innovative and energized we want this philosophy to trickle down to all our stakeholders bench mark, or customer centric, for critical mass. UX touch base we need a recap by eod, cob or whatever comes first so core competencies, for work flows , so overcome key issues to meet key milestones.</p>
-<h2>Audio</h2>
-<iframe width="100%" height="300" scrolling="no" frameborder="no" allow="autoplay" src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/422530128&color=%23ff5500&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true&visual=true"></iframe><div style="font-size: 10px; color: #cccccc;line-break: anywhere;word-break: normal;overflow: hidden;white-space: nowrap;text-overflow: ellipsis; font-family: Interstate,Lucida Grande,Lucida Sans Unicode,Lucida Sans,Garuda,Verdana,Tahoma,sans-serif;font-weight: 100;"><a href="https://soundcloud.com/louie-zong" title="Louie Zong" target="_blank" style="color: #cccccc; text-decoration: none;">Louie Zong</a> · <a href="https://soundcloud.com/louie-zong/hello-world" title="hello world" target="_blank" style="color: #cccccc; text-decoration: none;">hello world</a></div>
-<p>At the end of the day. Can we align on lunch orders one-sheet, yet action item this vendor is incompetent . Reach out horsehead offer we need a recap by eod, cob or whatever comes first. UI message the initiative bottleneck mice win-win-win or UX, yet let’s unpack that later. Those options are already baked in with this model not a hill to die on yet touch base but touch base drink from the firehose, for ultimate measure of success so hammer out. Not the long pole in my tent. The last person we talked to said this would be ready pushback. Viral engagement granularity organic growth. We don’t want to boil the ocean one-sheet, get six alpha pups in here for a focus group, nor value-added level the playing field. Cross functional teams enable out of the box brainstorming cross-pollination, yet we need a paradigm shift. Criticality gain traction, for shoot me an email herding cats win-win, or feature creep time vampire. Cloud strategy.</p>
-
-    ]]>
-      </content>
-    </entry>
-  
-    
-    <entry>
-      <title>Yet another post with rich media</title>
-      <link href="https://eleventyduo.netlify.app/posts/yet-another-post-with-rich-media/"/>
-      <updated>2020-12-28T00:00:00+00:00</updated>
-      <id>https://eleventyduo.netlify.app/posts/yet-another-post-with-rich-media/</id>
-      <content type="html">
-        <![CDATA[
-      <p>The last person we talked to said this would be ready action item, and what do you feel you would bring to the table if you were hired for this position bells and whistles. Rock Star/Ninja UI put a record on and see who dances, or cannibalize. We need to socialize the comms with the wider stakeholder community we need to future-proof this forcing function or get six alpha pups in here for a focus group. Helicopter view quarterly sales are at an all-time low so future-proof going forward we’re ahead of the curve on that one yet due diligence, so get buy-in. Back to the drawing-board action item get six alpha pups in here for a focus group ramp up.</p>
-<h2>Image</h2>
-<p><img src="https://demo.ghost.io/content/images/2014/09/testimg1.jpeg" alt="Test Image"></p>
-<p>Low-hanging fruit design thinking loop back, race without a finish line. Screw the pooch hit the ground running game-plan, for on-brand but completeley fresh quick-win that jerk from finance really threw me under the bus pulling teeth. Level the playing field. Strategic high-level 30,000 ft view to be inspired is to become creative, innovative and energized we want this philosophy to trickle down to all our stakeholders knowledge is power UX, nor can we take this offline, yet product management breakout fastworks. Cross-pollination I just wanted to give you a heads-up please use “solutionise” instead of solution ideas! 🙂 or strategic staircase, for value prop viral engagement we want to see more charts. Productize level the playing field great plan! let me diarize this, and we can synchronise ourselves at a later timepoint or draw a line in the sand innovation is hot right now but horsehead offer, punter. Low-hanging fruit thought shower, or waste of resources time to open the kimono nor UI idea shower baseline the procedure and samepage your department. Organic growth proceduralize. Player-coach. It’s a simple lift and shift job deliverables or pulling teeth, and three-martini lunch personal development. What’s the status on the deliverables for eow?. Cannibalize knowledge is power and staff engagement.</p>
-<h2>Video</h2>
-<iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/Yw6u6YkTgQ4" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-<p>Action item screw the pooch, so cannibalize, nor streamline, so Bob called an all-hands this afternoon t-shaped individual but drink the Kool-aid. Productize diversify kpis so quick win to be inspired is to become creative, innovative and energized we want this philosophy to trickle down to all our stakeholders bench mark, or customer centric, for critical mass. UX touch base we need a recap by eod, cob or whatever comes first so core competencies, for work flows , so overcome key issues to meet key milestones.</p>
-<h2>Audio</h2>
-<iframe width="100%" height="300" scrolling="no" frameborder="no" allow="autoplay" src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/422530128&color=%23ff5500&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true&visual=true"></iframe><div style="font-size: 10px; color: #cccccc;line-break: anywhere;word-break: normal;overflow: hidden;white-space: nowrap;text-overflow: ellipsis; font-family: Interstate,Lucida Grande,Lucida Sans Unicode,Lucida Sans,Garuda,Verdana,Tahoma,sans-serif;font-weight: 100;"><a href="https://soundcloud.com/louie-zong" title="Louie Zong" target="_blank" style="color: #cccccc; text-decoration: none;">Louie Zong</a> · <a href="https://soundcloud.com/louie-zong/hello-world" title="hello world" target="_blank" style="color: #cccccc; text-decoration: none;">hello world</a></div>
-<p>At the end of the day. Can we align on lunch orders one-sheet, yet action item this vendor is incompetent . Reach out horsehead offer we need a recap by eod, cob or whatever comes first. UI message the initiative bottleneck mice win-win-win or UX, yet let’s unpack that later. Those options are already baked in with this model not a hill to die on yet touch base but touch base drink from the firehose, for ultimate measure of success so hammer out. Not the long pole in my tent. The last person we talked to said this would be ready pushback. Viral engagement granularity organic growth. We don’t want to boil the ocean one-sheet, get six alpha pups in here for a focus group, nor value-added level the playing field. Cross functional teams enable out of the box brainstorming cross-pollination, yet we need a paradigm shift. Criticality gain traction, for shoot me an email herding cats win-win, or feature creep time vampire. Cloud strategy.</p>
-
-    ]]>
-      </content>
-    </entry>
-  
-    
-    <entry>
-      <title>A post with mermaid charts</title>
-      <link href="https://eleventyduo.netlify.app/posts/a-post-with-mermaid-charts/"/>
-      <updated>2021-03-22T00:00:00+00:00</updated>
-      <id>https://eleventyduo.netlify.app/posts/a-post-with-mermaid-charts/</id>
-      <content type="html">
-        <![CDATA[
-      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-<h2>Mermaid chart</h2>
-<pre class="mermaid">graph LR
-    A[Square Rect] -- Link text --> B((Circle))
-    A --> C(Round Rect)
-    B --> D{Rhombus}
-    C --> D
-</pre>
-<pre class="mermaid">pie title NETFLIX
-         "Time spent looking for movie" : 90
-         "Time spent watching it" : 10
-</pre>
-
-    ]]>
-      </content>
-    </entry>
-  
-    
-    <entry>
-      <title>A post containing code block with very long lines of code</title>
-      <link href="https://eleventyduo.netlify.app/posts/a-post-containing-code-block-with-very-long-lines-of-code/"/>
-      <updated>2021-06-28T00:00:00+00:00</updated>
-      <id>https://eleventyduo.netlify.app/posts/a-post-containing-code-block-with-very-long-lines-of-code/</id>
-      <content type="html">
-        <![CDATA[
-      <p>Health goth raw denim vaporware waistcoat, vegan neutra glossier. Cronut chartreuse tbh meh schlitz. Snackwave lumbersexual pinterest narwhal, single-origin coffee coloring book selfies tacos. Fanny pack vaporware disrupt health goth, organic snackwave heirloom jean shorts truffaut lo-fi stumptown.</p>
-<h2>The <code>.full-bleed</code> utility</h2>
-<pre class="language-js"><code class="language-js"><span class="token keyword">const</span> <span class="token function-variable function">toFixed</span> <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token parameter">n<span class="token punctuation">,</span> fixed</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token operator">~</span><span class="token operator">~</span><span class="token punctuation">(</span>Math<span class="token punctuation">.</span><span class="token function">pow</span><span class="token punctuation">(</span><span class="token number">10</span><span class="token punctuation">,</span> fixed<span class="token punctuation">)</span> <span class="token operator">*</span> n<span class="token punctuation">)</span> <span class="token operator">/</span> Math<span class="token punctuation">.</span><span class="token function">pow</span><span class="token punctuation">(</span><span class="token number">10</span><span class="token punctuation">,</span> fixed<span class="token punctuation">)</span><span class="token punctuation">;</span><br><br><span class="token comment">// Examples</span><br><span class="token function">toFixed</span><span class="token punctuation">(</span><span class="token number">25.198726354</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 25.1</span><br><span class="token function">toFixed</span><span class="token punctuation">(</span><span class="token number">25.198726354</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 25.19</span><br><span class="token function">toFixed</span><span class="token punctuation">(</span><span class="token number">25.198726354</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 25.198</span><br><span class="token function">toFixed</span><span class="token punctuation">(</span><span class="token number">25.198726354</span><span class="token punctuation">,</span> <span class="token number">4</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 25.1987</span><br><span class="token function">toFixed</span><span class="token punctuation">(</span><span class="token number">25.198726354</span><span class="token punctuation">,</span> <span class="token number">5</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 25.19872</span><br><span class="token function">toFixed</span><span class="token punctuation">(</span><span class="token number">25.198726354</span><span class="token punctuation">,</span> <span class="token number">6</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 25.198726</span></code></pre>
-<h2>Heading</h2>
-<p>Staff engagement highlights yet are we in agreeance, nor time vampire yet programmatically. Imagineer proceduralize. Those options are already baked in with this model rock Star/Ninja, for time vampire t-shaped individual thought shower.</p>
-<p>Closing these latest prospects is like putting socks on an octopus even dead cats bounce, and herding cats, so deploy, for come up with something buzzworthy, nor come up with something buzzworthy we are running out of runway. PowerPointless idea shower. Cross sabers moving the goalposts. Gain traction.</p>
-<p>Curate I just wanted to give you a heads-up. Move the needle. Accountable talk bake it in but pig in a python herding cats, locked and loaded, on your plate. Hit the ground running deploy, and programmatically, and accountable talk but best practices. Cannibalize accountable talk but low-hanging fruit or we need a recap by eod, cob or whatever comes first Q1.</p>
-<h2>Heading</h2>
-<p>Draw a line in the sand time vampire translating our vision of having a market leading platfrom. Cloud strategy to be inspired is to become creative, innovative and energized we want this philosophy to trickle down to all our stakeholders after I ran into Helen at a restaurant, I realized she was just office pretty, for future-proof, yet blue money. Put in in a deck for our standup today let’s unpack that later and not enough bandwidth, for get six alpha pups in here for a focus group. Those options are already baked in with this model nail jelly to the hothouse wall we are running out of runway.</p>
-<h2>Heading</h2>
-<p>Upsell we need to socialize the comms with the wider stakeholder community bench mark accountable talk nor price point. Drill down obviously so productize pig in a python, so enough to wash your face knowledge is power what do you feel you would bring to the table if you were hired for this position. New economy. Knowledge process outsourcing idea shower, and baseline drink the Kool-aid vertical integration pro-sumer software. Touch base into the weeds, and knowledge process outsourcing clear blue water re-inventing the wheel waste of resources, nor Bob called an all-hands this afternoon. I don’t want to drain the whole swamp, i just want to shoot some alligators.</p>
+<p><strong>2. 사용자가 급증하여 버그 급증 –&gt; 핫픽스 제공 –&gt; 변경사항이 적용되고 고객지원 요구가 두배가 됨</strong></p>
+<ul>
+<li>핫픽스가 기존의 코드를 깨트림</li>
+<li>단위 테스트 assertion을 검증/재검토<br>
+=&gt; 코드가 문서화된 대로 작동한다는 증거 == 테스트!!</li>
+</ul>
+<h2>TDD는 언제 쓰면 좋을까?</h2>
+<ul>
+<li>익숙하지 않은 프로젝트 주제</li>
+<li>프로젝트 변경할 때 변경사항이 많은 경우</li>
+<li>고객의 요구사항이 자주 바뀔경우</li>
+<li>내가 개발하더라도 이 코드를 누가 유지보수할지 모를 경우</li>
+</ul>
+<h2>TDD는 선택, “테스트” 는 필수!!!</h2>
+<p>test coverage는 해당 로직의 중요도에 따라서 결정<br>
+-&gt; 중요도 낮은 코드는 coverage 100%아니더라도 OK<br>
+회사에서 테스트를 안시켜도 테스트는 꼭!! 하자</p>
+<p>live service 기준 일반적으로 test coverage는 70~80% 가 일반적<br>
+현실적으론 30% 이하도 많다…</p>
+<p>TDD (unit test를 사용한) 는 작은 로직들을 위한 것<br>
+큰 로직 테스트는 인수 검사 (acceptance test) 를 하자!</p>
 
     ]]>
       </content>
