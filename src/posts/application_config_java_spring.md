@@ -1,6 +1,5 @@
 ---
 title: "Application Configuration in Java Spring: application.properties vs application.yml"
-date: git Created
 tags: [java, spring, web]
 permalink: "posts/{{ title | slug }}/index.html"
 ---

@@ -1,6 +1,5 @@
 ---
 title: "TDD: Test Driven Development – 한빛 MSA"
-date: git Created
 tags: [tdd]
 permalink: "posts/{{ title | slug }}/index.html"
 ---
