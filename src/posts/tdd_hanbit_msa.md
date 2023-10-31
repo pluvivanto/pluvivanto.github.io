@@ -9,7 +9,7 @@ permalink: "posts/{{ title | slug }}/index.html"
 
 ## TDD는 설계-구현-테스트 의 사이클을 빠르게 변하는 요구사항에 맞추기 좋게 하기 위한 것
 
-![TDD lifecycle](presentation1.jpg)_TDD lifecycle_
+![TDD lifecycle](../images/presentation1.jpg)_TDD lifecycle_
 
 볼링 게임 – TDD계의 Hello, World!
 
