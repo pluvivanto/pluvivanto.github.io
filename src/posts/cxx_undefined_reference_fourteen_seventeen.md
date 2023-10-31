@@ -1,6 +1,6 @@
 ---
 title: Weird undefined reference - CXX 14 vs 17
-date: git Created
+date: 2023-10-31
 tags: [CXX]
 permalink: "posts/{{ title | slug }}/index.html"
 ---
