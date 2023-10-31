@@ -5,7 +5,7 @@
   <link href="https://pluvivanto.github.io//feed.xml" rel="self"/>
   <link href="https://pluvivanto.github.io//"/>
   
-    <updated>2023-10-31T03:32:12Z</updated>
+    <updated>2023-10-31T03:33:26Z</updated>
   
   <id>https://pluvivanto.github.io/</id>
   <author>
@@ -17,7 +17,7 @@
     <entry>
       <title>Application Configuration in Java Spring: application.properties vs application.yml</title>
       <link href="https://pluvivanto.github.io//posts/application-configuration-in-java-spring:-application.properties-vs-application.yml/"/>
-      <updated>2023-10-31T03:32:12Z</updated>
+      <updated>2023-10-31T03:33:26Z</updated>
       <id>https://pluvivanto.github.io//posts/application-configuration-in-java-spring:-application.properties-vs-application.yml/</id>
       <content type="html">
         <![CDATA[
@@ -76,7 +76,7 @@ Wondering why? Well, yml seems really organized, pushing developers toward a spe
     <entry>
       <title>Weird undefined reference - CXX 14 vs 17</title>
       <link href="https://pluvivanto.github.io//posts/weird-undefined-reference-cxx-14-vs-17/"/>
-      <updated>2023-10-31T03:32:12Z</updated>
+      <updated>2023-10-31T03:33:26Z</updated>
       <id>https://pluvivanto.github.io//posts/weird-undefined-reference-cxx-14-vs-17/</id>
       <content type="html">
         <![CDATA[
@@ -112,7 +112,7 @@ Wondering why? Well, yml seems really organized, pushing developers toward a spe
     <entry>
       <title>TDD: Test Driven Development – 한빛 MSA</title>
       <link href="https://pluvivanto.github.io//posts/tdd:-test-driven-development-msa/"/>
-      <updated>2023-10-31T03:32:12Z</updated>
+      <updated>2023-10-31T03:33:26Z</updated>
       <id>https://pluvivanto.github.io//posts/tdd:-test-driven-development-msa/</id>
       <content type="html">
         <![CDATA[
