@@ -5,7 +5,7 @@
   <link href="https://pluvivanto.github.io//feed.xml" rel="self"/>
   <link href="https://pluvivanto.github.io//"/>
   
-    <updated>2023-10-09T12:53:37Z</updated>
+    <updated>2023-10-31T03:07:05Z</updated>
   
   <id>https://pluvivanto.github.io/</id>
   <author>
@@ -17,7 +17,7 @@
     <entry>
       <title>Application Configuration in Java Spring: application.properties vs application.yml</title>
       <link href="https://pluvivanto.github.io//posts/application-configuration-in-java-spring:-application.properties-vs-application.yml/"/>
-      <updated>2023-10-09T12:53:37Z</updated>
+      <updated>2023-10-31T03:07:05Z</updated>
       <id>https://pluvivanto.github.io//posts/application-configuration-in-java-spring:-application.properties-vs-application.yml/</id>
       <content type="html">
         <![CDATA[
@@ -74,15 +74,51 @@ Wondering why? Well, yml seems really organized, pushing developers toward a spe
   
     
     <entry>
+      <title>Weird undefined reference - CXX 14 vs 17</title>
+      <link href="https://pluvivanto.github.io//posts/weird-undefined-reference-cxx-14-vs-17/"/>
+      <updated>2023-10-31T03:07:05Z</updated>
+      <id>https://pluvivanto.github.io//posts/weird-undefined-reference-cxx-14-vs-17/</id>
+      <content type="html">
+        <![CDATA[
+      <p>Lately, I've been working on a project that involves migrating our C++17-based solution to an environment that relies on C++14. Honestly, I'm not entirely sure why a client would want such a downgrade, but the customer is king, right?</p>
+<p>So, I went ahead and replaced all the features introduced in C++17, like <code>&lt;variant&gt;</code>, <code>&lt;filesystem&gt;</code>, inline variables, lambda capture of <code>*this</code>, <code>constexpr</code> lambdas, <code>__has_include</code>, and, regrettably, one of the most important ones, the <code>[[maybe_unused]]</code> attribute. Most of these changes went smoothly, but I ran into a peculiar issue: undefined references during linking. I was absolutely certain that everything was correctly declared, defined in the header files, and properly linked.</p>
+<p>After several days (and a few sleepless nights) pulling my hair out, I finally pinpointed the root cause. The issue stemmed from <code>constexpr static</code> data members in the header files. To be more precise, it's due to the nuances of how C++ treats these members:</p>
+<blockquote>
+<p>A constexpr specifier used in an object declaration or non-static member function (until C++14) implies const. A constexpr specifier used in a function or static data member (since C++17) declaration implies inline. If any declaration of a function or function template has a constexpr specifier, then every declaration must contain that specifier.</p>
+<p>- from <a href="https://en.cppreference.com/w/cpp/language/constexpr">cppreference</a></p>
+</blockquote>
+<blockquote>
+<p>If a const non-inline (since C++17) static data member or a constexpr static data member (since C++11)(until C++17) is <a href="https://en.cppreference.com/w/cpp/language/definition#ODR-use">odr-used</a>, a definition at namespace scope is still required, but it cannot have an initializer.</p>
+<p>A constexpr static data member is implicitly inline and does not need to be redeclared at namespace scope. This redeclaration without an initializer (formerly required) is still permitted, but is deprecated. (since C++17)</p>
+<pre class="language-cpp"><code class="language-cpp"><span class="token keyword">struct</span> <span class="token class-name">X</span>
+<span class="token punctuation">{</span>
+    <span class="token keyword">static</span> <span class="token keyword">const</span> <span class="token keyword">int</span> n <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">;</span>
+    <span class="token keyword">static</span> <span class="token keyword">constexpr</span> <span class="token keyword">int</span> m <span class="token operator">=</span> <span class="token number">4</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+<span class="token keyword">const</span> <span class="token keyword">int</span> <span class="token operator">*</span>p <span class="token operator">=</span> <span class="token operator">&amp;</span>X<span class="token double-colon punctuation">::</span>n<span class="token punctuation">,</span> <span class="token operator">*</span>q <span class="token operator">=</span> <span class="token operator">&amp;</span>X<span class="token double-colon punctuation">::</span>m<span class="token punctuation">;</span> <span class="token comment">// X::n and X::m are odr-used</span>
+<span class="token keyword">const</span> <span class="token keyword">int</span> X<span class="token double-colon punctuation">::</span>n<span class="token punctuation">;</span>                   <span class="token comment">// … so a definition is necessary</span>
+<span class="token keyword">constexpr</span> <span class="token keyword">int</span> X<span class="token double-colon punctuation">::</span>m<span class="token punctuation">;</span>               <span class="token comment">// … (except for X::m in C++17)</span></code></pre>
+<p>- from <a href="https://en.cppreference.com/w/cpp/language/static">cppreference</a></p>
+</blockquote>
+<p>This means that I didn't have to re-declare <code>static const</code> and <code>static constexpr</code> member variables in corresponding <code>.cpp</code> files in C++17. But because I'm downgrading the project, I have to do it now.</p>
+<p>So, I've solved one problem by re-declaring every <code>static constexpr</code> variable. But what happens when the class is templated? According to the <a href="https://isocpp.org/wiki/faq/templates#templates-defn-vs-decl">Standard C++ Foundation</a>, it's not advisable to split a templated class into declaration and definition.</p>
+<p>I scoured for a more elegant, intuitive, and scalable solution but ended up removing the static keyword and creating an instance every time I needed to use the class. I wish I could come up with a better solution, but I don't believe this &quot;problem&quot; can be fixed without refactoring the entire legacy project. It's working, and I'm content with that for now.</p>
+
+    ]]>
+      </content>
+    </entry>
+  
+    
+    <entry>
       <title>TDD: Test Driven Development – 한빛 MSA</title>
       <link href="https://pluvivanto.github.io//posts/tdd:-test-driven-development-msa/"/>
-      <updated>2023-10-09T12:53:37Z</updated>
+      <updated>2023-10-31T03:07:05Z</updated>
       <id>https://pluvivanto.github.io//posts/tdd:-test-driven-development-msa/</id>
       <content type="html">
         <![CDATA[
       <p><strong><em>Speaker: MS 코리아 Solutions Architect 정보람님</em></strong></p>
 <h2>TDD는 설계-구현-테스트 의 사이클을 빠르게 변하는 요구사항에 맞추기 좋게 하기 위한 것</h2>
-<p><img src="presentation1.jpg" alt="TDD lifecycle"><em>TDD lifecycle</em></p>
+<p><img src="../images/presentation1.jpg" alt="TDD lifecycle"><em>TDD lifecycle</em></p>
 <p>볼링 게임 – TDD계의 Hello, World!</p>
 <h2>TDD pros &amp; cons</h2>
 <table>
